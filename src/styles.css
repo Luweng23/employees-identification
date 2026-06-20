@@ -501,6 +501,29 @@ button {
   display: none;
 }
 
+.admin-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.delete-button {
+  border: none;
+  border-radius: 18px;
+  padding: 14px 20px;
+  background: rgba(248, 113, 113, 0.15);
+  color: #fee2e2;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.delete-button:hover {
+  background: rgba(248, 113, 113, 0.3);
+  transform: translateY(-1px);
+}
+
 .upload-message {
   margin: 0;
   color: #c7d2fe;

@@ -181,6 +181,25 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   }
 });
 
+app.delete('/api/source', (req, res) => {
+  const token = req.header('x-admin-token');
+  if (token !== ADMIN_TOKEN) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      fs.unlinkSync(DATA_FILE);
+    }
+    employees = [];
+    saveEmployeesToDisk(employees);
+    return res.json({ success: true, message: 'Source file deleted and employee data cleared.' });
+  } catch (error) {
+    console.error('Failed to delete source file:', error);
+    return res.status(500).json({ error: 'Failed to delete source file' });
+  }
+});
+
 // Serve SPA catch-all route - must be last
 app.get('*', (req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));

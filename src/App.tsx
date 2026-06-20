@@ -133,6 +133,36 @@ function App() {
     }
   };
 
+  const handleDeleteSource = async () => {
+    const confirmed = window.confirm('Delete the uploaded source file and clear server data?');
+    if (!confirmed) return;
+
+    setUploadMessage('Deleting uploaded source file...');
+
+    try {
+      const response = await fetch(`${API_BASE}/source`, {
+        method: 'DELETE',
+        headers: {
+          'x-admin-token': ADMIN_CODE,
+        },
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        setUploadMessage(result.error || 'Delete failed. Confirm admin access.');
+        return;
+      }
+
+      setEmployees([]);
+      setActive(null);
+      setQuery('');
+      setUploadMessage(result.message || 'Source file deleted successfully.');
+    } catch (error) {
+      console.error('Delete source failed:', error);
+      setUploadMessage('Delete failed. Check network and server status.');
+    }
+  };
+
   const handleAdminSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (adminPin.trim() === ADMIN_CODE) {
@@ -212,6 +242,11 @@ function App() {
                       />
                     </label>
                     <p className="upload-note">Upload will update the employee list for all users in the current app session.</p>
+                  </div>
+                  <div className="admin-actions">
+                    <button className="delete-button" type="button" onClick={handleDeleteSource}>
+                      Delete uploaded source file
+                    </button>
                   </div>
                   {uploadMessage && <p className="upload-message">{uploadMessage}</p>}
                 </>
